@@ -7,12 +7,15 @@
 #include "html5applicationviewer.h"
 
 #include "sqlfunctions.h"
+#include "automaton.h"
 
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
 
     sqlfunctions obj;
+    automaton autoObj;
+    autoObj.setObj(&obj);
 
     Html5ApplicationViewer viewer;
     viewer.setOrientation(Html5ApplicationViewer::ScreenOrientationAuto);
@@ -21,8 +24,10 @@ int main(int argc, char *argv[])
     viewer.setFixedSize(1200, 900);
 
     QWebFrame *frame = viewer.webView()->page()->mainFrame();
-    QString objJavascriptName = "mySqlObj";
-    frame->addToJavaScriptWindowObject(objJavascriptName, &obj);
+    QString sqlObjName = "mySqlObj";
+    QString automatonObjName = "automaton";
+    frame->addToJavaScriptWindowObject(sqlObjName, &obj);
+    frame->addToJavaScriptWindowObject(automatonObjName, &autoObj);
 
     return app.exec();
 }

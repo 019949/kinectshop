@@ -48,14 +48,20 @@ OBJECTS_DIR   = ./
 SOURCES       = ../KinectShopApp/main.cpp \
 		../KinectShopApp/sqlfunctions.cpp \
 		../KinectShopApp/product.cpp \
+		../KinectShopApp/automaton.cpp \
+		../KinectShopApp/state.cpp \
 		../KinectShopApp/html5applicationviewer/html5applicationviewer.cpp moc_html5applicationviewer.cpp \
-		moc_sqlfunctions.cpp
+		moc_sqlfunctions.cpp \
+		moc_automaton.cpp
 OBJECTS       = main.o \
 		sqlfunctions.o \
 		product.o \
+		automaton.o \
+		state.o \
 		html5applicationviewer.o \
 		moc_html5applicationviewer.o \
-		moc_sqlfunctions.o
+		moc_sqlfunctions.o \
+		moc_automaton.o
 DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/shell-unix.conf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/unix.conf \
@@ -375,7 +381,7 @@ qmake_all: FORCE
 
 dist: 
 	@test -d .tmp/KinectShopApp1.0.0 || mkdir -p .tmp/KinectShopApp1.0.0
-	$(COPY_FILE) --parents $(SOURCES) $(DIST) .tmp/KinectShopApp1.0.0/ && $(COPY_FILE) --parents ../KinectShopApp/html5applicationviewer/html5applicationviewer.h ../KinectShopApp/sqlfunctions.h ../KinectShopApp/product.h .tmp/KinectShopApp1.0.0/ && $(COPY_FILE) --parents ../KinectShopApp/main.cpp ../KinectShopApp/sqlfunctions.cpp ../KinectShopApp/product.cpp ../KinectShopApp/html5applicationviewer/html5applicationviewer.cpp .tmp/KinectShopApp1.0.0/ && (cd `dirname .tmp/KinectShopApp1.0.0` && $(TAR) KinectShopApp1.0.0.tar KinectShopApp1.0.0 && $(COMPRESS) KinectShopApp1.0.0.tar) && $(MOVE) `dirname .tmp/KinectShopApp1.0.0`/KinectShopApp1.0.0.tar.gz . && $(DEL_FILE) -r .tmp/KinectShopApp1.0.0
+	$(COPY_FILE) --parents $(SOURCES) $(DIST) .tmp/KinectShopApp1.0.0/ && $(COPY_FILE) --parents ../KinectShopApp/html5applicationviewer/html5applicationviewer.h ../KinectShopApp/sqlfunctions.h ../KinectShopApp/product.h ../KinectShopApp/automaton.h ../KinectShopApp/state.h .tmp/KinectShopApp1.0.0/ && $(COPY_FILE) --parents ../KinectShopApp/main.cpp ../KinectShopApp/sqlfunctions.cpp ../KinectShopApp/product.cpp ../KinectShopApp/automaton.cpp ../KinectShopApp/state.cpp ../KinectShopApp/html5applicationviewer/html5applicationviewer.cpp .tmp/KinectShopApp1.0.0/ && (cd `dirname .tmp/KinectShopApp1.0.0` && $(TAR) KinectShopApp1.0.0.tar KinectShopApp1.0.0 && $(COMPRESS) KinectShopApp1.0.0.tar) && $(MOVE) `dirname .tmp/KinectShopApp1.0.0`/KinectShopApp1.0.0.tar.gz . && $(DEL_FILE) -r .tmp/KinectShopApp1.0.0
 
 
 clean:compiler_clean 
@@ -403,9 +409,9 @@ check: first
 
 compiler_rcc_make_all:
 compiler_rcc_clean:
-compiler_moc_header_make_all: moc_html5applicationviewer.cpp moc_sqlfunctions.cpp
+compiler_moc_header_make_all: moc_html5applicationviewer.cpp moc_sqlfunctions.cpp moc_automaton.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) moc_html5applicationviewer.cpp moc_sqlfunctions.cpp
+	-$(DEL_FILE) moc_html5applicationviewer.cpp moc_sqlfunctions.cpp moc_automaton.cpp
 moc_html5applicationviewer.cpp: /usr/include/qt5/QtWidgets/QWidget \
 		/usr/include/qt5/QtWidgets/qwidget.h \
 		/usr/include/qt5/QtGui/qwindowdefs.h \
@@ -637,9 +643,90 @@ moc_sqlfunctions.cpp: /usr/include/qt5/QtSql/QSqlQuery \
 		/usr/include/qt5/QtGui/qtouchdevice.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/QString \
+		/usr/include/qt5/QtCore/QDateTime \
+		/usr/include/qt5/QtCore/qdatetime.h \
 		../KinectShopApp/product.h \
 		../KinectShopApp/sqlfunctions.h
 	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../KinectShopApp/sqlfunctions.h -o moc_sqlfunctions.cpp
+
+moc_automaton.cpp: /usr/include/qt5/QtCore/QObject \
+		/usr/include/qt5/QtCore/qobject.h \
+		/usr/include/qt5/QtCore/qobjectdefs.h \
+		/usr/include/qt5/QtCore/qnamespace.h \
+		/usr/include/qt5/QtCore/qglobal.h \
+		/usr/include/qt5/QtCore/qconfig.h \
+		/usr/include/qt5/QtCore/qfeatures.h \
+		/usr/include/qt5/QtCore/qsystemdetection.h \
+		/usr/include/qt5/QtCore/qprocessordetection.h \
+		/usr/include/qt5/QtCore/qcompilerdetection.h \
+		/usr/include/qt5/QtCore/qglobalstatic.h \
+		/usr/include/qt5/QtCore/qatomic.h \
+		/usr/include/qt5/QtCore/qbasicatomic.h \
+		/usr/include/qt5/QtCore/qatomic_bootstrap.h \
+		/usr/include/qt5/QtCore/qgenericatomic.h \
+		/usr/include/qt5/QtCore/qatomic_msvc.h \
+		/usr/include/qt5/QtCore/qatomic_integrity.h \
+		/usr/include/qt5/QtCore/qoldbasicatomic.h \
+		/usr/include/qt5/QtCore/qatomic_vxworks.h \
+		/usr/include/qt5/QtCore/qatomic_power.h \
+		/usr/include/qt5/QtCore/qatomic_alpha.h \
+		/usr/include/qt5/QtCore/qatomic_armv7.h \
+		/usr/include/qt5/QtCore/qatomic_armv6.h \
+		/usr/include/qt5/QtCore/qatomic_armv5.h \
+		/usr/include/qt5/QtCore/qatomic_bfin.h \
+		/usr/include/qt5/QtCore/qatomic_ia64.h \
+		/usr/include/qt5/QtCore/qatomic_mips.h \
+		/usr/include/qt5/QtCore/qatomic_s390.h \
+		/usr/include/qt5/QtCore/qatomic_sh4a.h \
+		/usr/include/qt5/QtCore/qatomic_sparc.h \
+		/usr/include/qt5/QtCore/qatomic_gcc.h \
+		/usr/include/qt5/QtCore/qatomic_x86.h \
+		/usr/include/qt5/QtCore/qatomic_cxx11.h \
+		/usr/include/qt5/QtCore/qatomic_unix.h \
+		/usr/include/qt5/QtCore/qmutex.h \
+		/usr/include/qt5/QtCore/qlogging.h \
+		/usr/include/qt5/QtCore/qflags.h \
+		/usr/include/qt5/QtCore/qtypeinfo.h \
+		/usr/include/qt5/QtCore/qtypetraits.h \
+		/usr/include/qt5/QtCore/qsysinfo.h \
+		/usr/include/qt5/QtCore/qobjectdefs_impl.h \
+		/usr/include/qt5/QtCore/qstring.h \
+		/usr/include/qt5/QtCore/qchar.h \
+		/usr/include/qt5/QtCore/qbytearray.h \
+		/usr/include/qt5/QtCore/qrefcount.h \
+		/usr/include/qt5/QtCore/qarraydata.h \
+		/usr/include/qt5/QtCore/qstringbuilder.h \
+		/usr/include/qt5/QtCore/qlist.h \
+		/usr/include/qt5/QtCore/qalgorithms.h \
+		/usr/include/qt5/QtCore/qiterator.h \
+		/usr/include/qt5/QtCore/qcoreevent.h \
+		/usr/include/qt5/QtCore/qscopedpointer.h \
+		/usr/include/qt5/QtCore/qmetatype.h \
+		/usr/include/qt5/QtCore/qvarlengtharray.h \
+		/usr/include/qt5/QtCore/qcontainerfwd.h \
+		/usr/include/qt5/QtCore/qisenum.h \
+		/usr/include/qt5/QtCore/qobject_impl.h \
+		../KinectShopApp/state.h \
+		/usr/include/qt5/QtCore/QDebug \
+		/usr/include/qt5/QtCore/qdebug.h \
+		/usr/include/qt5/QtCore/qhash.h \
+		/usr/include/qt5/QtCore/qpair.h \
+		/usr/include/qt5/QtCore/qmap.h \
+		/usr/include/qt5/QtCore/qtextstream.h \
+		/usr/include/qt5/QtCore/qiodevice.h \
+		/usr/include/qt5/QtCore/qlocale.h \
+		/usr/include/qt5/QtCore/qvariant.h \
+		/usr/include/qt5/QtCore/qstringlist.h \
+		/usr/include/qt5/QtCore/qdatastream.h \
+		/usr/include/qt5/QtCore/qregexp.h \
+		/usr/include/qt5/QtCore/qstringmatcher.h \
+		/usr/include/qt5/QtCore/qshareddata.h \
+		/usr/include/qt5/QtCore/qvector.h \
+		/usr/include/qt5/QtCore/qpoint.h \
+		/usr/include/qt5/QtCore/qset.h \
+		/usr/include/qt5/QtCore/qcontiguouscache.h \
+		../KinectShopApp/automaton.h
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../KinectShopApp/automaton.h -o moc_automaton.cpp
 
 compiler_moc_source_make_all: html5applicationviewer.moc
 compiler_moc_source_clean:
@@ -1209,6 +1296,7 @@ main.o: ../KinectShopApp/main.cpp /usr/include/qt5/QtWidgets/QApplication \
 		/usr/include/qt5/QtWidgets/QMessageBox \
 		/usr/include/qt5/QtWidgets/qmessagebox.h \
 		/usr/include/qt5/QtWidgets/qdialog.h \
+		/usr/include/qt5/QtCore/QDateTime \
 		../KinectShopApp/product.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o ../KinectShopApp/main.cpp
 
@@ -1332,6 +1420,8 @@ sqlfunctions.o: ../KinectShopApp/sqlfunctions.cpp ../KinectShopApp/sqlfunctions.
 		/usr/include/qt5/QtGui/qtouchdevice.h \
 		/usr/include/qt5/QtCore/QObject \
 		/usr/include/qt5/QtCore/QString \
+		/usr/include/qt5/QtCore/QDateTime \
+		/usr/include/qt5/QtCore/qdatetime.h \
 		../KinectShopApp/product.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o sqlfunctions.o ../KinectShopApp/sqlfunctions.cpp
 
@@ -1381,6 +1471,88 @@ product.o: ../KinectShopApp/product.cpp ../KinectShopApp/product.h \
 		/usr/include/qt5/QtCore/qarraydata.h \
 		/usr/include/qt5/QtCore/qstringbuilder.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o product.o ../KinectShopApp/product.cpp
+
+automaton.o: ../KinectShopApp/automaton.cpp ../KinectShopApp/automaton.h \
+		/usr/include/qt5/QtCore/QObject \
+		/usr/include/qt5/QtCore/qobject.h \
+		/usr/include/qt5/QtCore/qobjectdefs.h \
+		/usr/include/qt5/QtCore/qnamespace.h \
+		/usr/include/qt5/QtCore/qglobal.h \
+		/usr/include/qt5/QtCore/qconfig.h \
+		/usr/include/qt5/QtCore/qfeatures.h \
+		/usr/include/qt5/QtCore/qsystemdetection.h \
+		/usr/include/qt5/QtCore/qprocessordetection.h \
+		/usr/include/qt5/QtCore/qcompilerdetection.h \
+		/usr/include/qt5/QtCore/qglobalstatic.h \
+		/usr/include/qt5/QtCore/qatomic.h \
+		/usr/include/qt5/QtCore/qbasicatomic.h \
+		/usr/include/qt5/QtCore/qatomic_bootstrap.h \
+		/usr/include/qt5/QtCore/qgenericatomic.h \
+		/usr/include/qt5/QtCore/qatomic_msvc.h \
+		/usr/include/qt5/QtCore/qatomic_integrity.h \
+		/usr/include/qt5/QtCore/qoldbasicatomic.h \
+		/usr/include/qt5/QtCore/qatomic_vxworks.h \
+		/usr/include/qt5/QtCore/qatomic_power.h \
+		/usr/include/qt5/QtCore/qatomic_alpha.h \
+		/usr/include/qt5/QtCore/qatomic_armv7.h \
+		/usr/include/qt5/QtCore/qatomic_armv6.h \
+		/usr/include/qt5/QtCore/qatomic_armv5.h \
+		/usr/include/qt5/QtCore/qatomic_bfin.h \
+		/usr/include/qt5/QtCore/qatomic_ia64.h \
+		/usr/include/qt5/QtCore/qatomic_mips.h \
+		/usr/include/qt5/QtCore/qatomic_s390.h \
+		/usr/include/qt5/QtCore/qatomic_sh4a.h \
+		/usr/include/qt5/QtCore/qatomic_sparc.h \
+		/usr/include/qt5/QtCore/qatomic_gcc.h \
+		/usr/include/qt5/QtCore/qatomic_x86.h \
+		/usr/include/qt5/QtCore/qatomic_cxx11.h \
+		/usr/include/qt5/QtCore/qatomic_unix.h \
+		/usr/include/qt5/QtCore/qmutex.h \
+		/usr/include/qt5/QtCore/qlogging.h \
+		/usr/include/qt5/QtCore/qflags.h \
+		/usr/include/qt5/QtCore/qtypeinfo.h \
+		/usr/include/qt5/QtCore/qtypetraits.h \
+		/usr/include/qt5/QtCore/qsysinfo.h \
+		/usr/include/qt5/QtCore/qobjectdefs_impl.h \
+		/usr/include/qt5/QtCore/qstring.h \
+		/usr/include/qt5/QtCore/qchar.h \
+		/usr/include/qt5/QtCore/qbytearray.h \
+		/usr/include/qt5/QtCore/qrefcount.h \
+		/usr/include/qt5/QtCore/qarraydata.h \
+		/usr/include/qt5/QtCore/qstringbuilder.h \
+		/usr/include/qt5/QtCore/qlist.h \
+		/usr/include/qt5/QtCore/qalgorithms.h \
+		/usr/include/qt5/QtCore/qiterator.h \
+		/usr/include/qt5/QtCore/qcoreevent.h \
+		/usr/include/qt5/QtCore/qscopedpointer.h \
+		/usr/include/qt5/QtCore/qmetatype.h \
+		/usr/include/qt5/QtCore/qvarlengtharray.h \
+		/usr/include/qt5/QtCore/qcontainerfwd.h \
+		/usr/include/qt5/QtCore/qisenum.h \
+		/usr/include/qt5/QtCore/qobject_impl.h \
+		../KinectShopApp/state.h \
+		/usr/include/qt5/QtCore/QDebug \
+		/usr/include/qt5/QtCore/qdebug.h \
+		/usr/include/qt5/QtCore/qhash.h \
+		/usr/include/qt5/QtCore/qpair.h \
+		/usr/include/qt5/QtCore/qmap.h \
+		/usr/include/qt5/QtCore/qtextstream.h \
+		/usr/include/qt5/QtCore/qiodevice.h \
+		/usr/include/qt5/QtCore/qlocale.h \
+		/usr/include/qt5/QtCore/qvariant.h \
+		/usr/include/qt5/QtCore/qstringlist.h \
+		/usr/include/qt5/QtCore/qdatastream.h \
+		/usr/include/qt5/QtCore/qregexp.h \
+		/usr/include/qt5/QtCore/qstringmatcher.h \
+		/usr/include/qt5/QtCore/qshareddata.h \
+		/usr/include/qt5/QtCore/qvector.h \
+		/usr/include/qt5/QtCore/qpoint.h \
+		/usr/include/qt5/QtCore/qset.h \
+		/usr/include/qt5/QtCore/qcontiguouscache.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o automaton.o ../KinectShopApp/automaton.cpp
+
+state.o: ../KinectShopApp/state.cpp ../KinectShopApp/state.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o state.o ../KinectShopApp/state.cpp
 
 html5applicationviewer.o: ../KinectShopApp/html5applicationviewer/html5applicationviewer.cpp ../KinectShopApp/html5applicationviewer/html5applicationviewer.h \
 		/usr/include/qt5/QtWidgets/QWidget \
@@ -1556,6 +1728,9 @@ moc_html5applicationviewer.o: moc_html5applicationviewer.cpp
 
 moc_sqlfunctions.o: moc_sqlfunctions.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_sqlfunctions.o moc_sqlfunctions.cpp
+
+moc_automaton.o: moc_automaton.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_automaton.o moc_automaton.cpp
 
 ####### Install
 

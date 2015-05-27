@@ -14,6 +14,7 @@
 #include <QMessageBox>
 #include <QObject>
 #include <QString>
+#include <QDateTime>
 
 #include "product.h"
 
@@ -33,6 +34,8 @@ class sqlfunctions:public QObject{
         void        purchaseDone(vector<product> cart);
 
         double      balanceChanged(double amount);
+        double      priceChanged(double price);
+        double      stockChanged(double stock);
         void        cartChanged();
 
         void        adminLoggedIn();
@@ -42,8 +45,10 @@ class sqlfunctions:public QObject{
     public slots:
         // SHOPFUNKTIONEN
         // Einkaufsfunktion und ihre Hilfsfunktionen
+        // QString-Konzept: einfache Erweiterbarkeit der Funktionen
         product     isAlreadyInCart(int pid, int amount, double price, QString title);
         QString     listAllProducts();
+        QString     listAllProducts(QString mode);
         void        addToCart(int pid, int amount, double price, QString title);
         QString     showCart();
         void        clearCart();
@@ -54,36 +59,38 @@ class sqlfunctions:public QObject{
         bool        purchase();
         bool        isCartEmpty();
 
-        // Login und Accountverwaltug
+        // Login und Accountverwaltung
         void        registerUser(QString username, QString password, QString repeatedPassword);
         bool        login(QString username, QString password);
         bool        logout();
-        void        refillBalance(double amount);
         void        timeout();
 
         // ADMINISTRATORFUNKTIONEN ----> alle Funktionen dieser Kategorie noch zu implementieren
         // Userverwaltung
         QString     listAllUsers();
         // Accounts
-        /*void        createAccount();
-        void        editAccount(int id);*/
+        //void        createAccount();
+        //void        editAccount(int id);*/
         void        empowerUser(int id);
         void        disempowerUser(int id);
-        /*void        blockAccount(int id);
         void        blockAccount(int id, int hours);
+        void        blockAccountPermanently(int id);
+        void        unblockAccount(int id);
         void        terminateAccount(int id);
         // Guthaben
-        void        changeBalance(int id, QString mode, double number); // soll RefillBalance ersetzen!!
+        void        changeBalance(int id, QString mode, double number);
         // Passwort
         void        changePassword(int id, QString mode);
-        void        changePassword(int id, QString mode, QString password); // soll User später auch verwenden dürfen
+        void        changePassword(int id, QString mode, QString password);
+        bool        userChangesPassword(int id, QString password, QString passwordRepeated);
 
         // Warenverwaltung
-        void        deleteWareRecord();
+        void        deleteWareRecord(int id);
         void        createWareRecord();
-        void        changeWareAmount(int id, QString mode);
-        void        changeStock();
+        void        changeStock(int id, QString mode, double number);
+        void        changeWarePrice(int id, QString mode, double number);
 
+        /*
         // Userstatistik
         void        showUserActivity();     // online Flag? Area User(Uhrzeit)
         void        showUserInformation();  // Geschlecht Pie, Alter Bar ...
@@ -106,6 +113,7 @@ class sqlfunctions:public QObject{
         // Testfunktionen
         void        testJs();
         void        testCpp();
+        void        testCpp2();
         void        testSql(QString a, QString b, QString c);
 
     private:

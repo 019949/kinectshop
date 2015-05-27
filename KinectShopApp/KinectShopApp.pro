@@ -19,7 +19,9 @@ DEPLOYMENTFOLDERS += folder_source folder_css folder_js folder_img folder_fonts
 # The .cpp file which was generated for your project. Feel free to hack it.
 SOURCES += main.cpp \
     sqlfunctions.cpp \
-    product.cpp
+    product.cpp \
+    automaton.cpp \
+    state.cpp
 
 # Please do not modify the following two lines. Required for deployment.
 include(html5applicationviewer/html5applicationviewer.pri)
@@ -34,4 +36,6 @@ QT += sql
 
 HEADERS += \
     sqlfunctions.h \
-    product.h
+    product.h \
+    automaton.h \
+    state.h

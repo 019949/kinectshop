@@ -22,8 +22,9 @@ sqlfunctions::sqlfunctions(){
         QMessageBox msgBox;
         msgBox.setText("Es konnte leider keine Verbindung zur SQL-Datenbank hergestellt werden!");
         msgBox.exec();
-    }// Ausgeben wenn Verbindung hergestellt wurde
-    /*
+    }
+
+    /* // Ausgabe wenn Verbindung hergestellt wurde
     else{
         QMessageBox msgBox;
         msgBox.setText("Die Verbindung zu " + db.hostName() + " wurde hergestellt.");
@@ -49,7 +50,7 @@ QString sqlfunctions::listAllProducts(){
     QSqlQuery query;
 
     // Alles Abfragen
-    query.prepare("SELECT * FROM products ORDER BY products.id ASC");
+    query.prepare("SELECT id, title, price, stock FROM products ORDER BY products.id ASC");
     query.exec();
 
     int pid, stock;
@@ -76,7 +77,7 @@ QString sqlfunctions::listAllProducts(){
         pid = query.value(0).toInt();
         title = query.value(1).toString().toStdString();
         price = query.value(2).toDouble();
-        stock = query.value(4).toInt();
+        stock = query.value(3).toInt();
         stream  <<  "<tr>"
                 <<  "<td>"      <<  pid       <<    "</td>"
                 <<  "<td>"      <<  title     <<    "</td>"
@@ -93,6 +94,107 @@ QString sqlfunctions::listAllProducts(){
 
     stream  <<  "</tbody>"
             <<  "</table>"  <<  endl;
+
+
+    string s = stream.str();
+
+    // Testfunktion
+    // cout    << s    << endl;
+
+    QString htmlOutput = QString::fromStdString(s);
+
+    /* // Test
+    QMessageBox msgBox;
+    msgBox.setText(htmlOutput);
+    msgBox.exec();
+    */
+
+    return htmlOutput;
+}
+
+QString sqlfunctions::listAllProducts(QString mode){
+    QSqlQuery query;
+
+    // Alles Abfragen
+    query.prepare("SELECT id, title, price, stock FROM products ORDER BY products.id ASC");
+    query.exec();
+
+    int pid, stock;
+    string title;
+    double price;
+
+    stringstream stream;
+
+    // Alles darstellen
+    stream  <<  "<table id='cartList' class='sortable'>"
+            <<  "<thead>"
+            <<  "<tr>"
+            <<  endl;
+
+    if(mode == "checkboxes"){
+        stream  <<  "<th class='no-sort'></th>"
+                <<  endl;
+    }
+
+    stream  <<  "<th data-sort='number'     class='sortByPid ascending'>"      <<  "PID"    <<  "</th>"
+            <<  "<th data-sort='name'       class='sortByName'>"     <<  "Produktname"   <<  "</th>"
+            <<  "<th data-sort='number'     class='sortByPrice'>"    <<  "Preis"         <<  "</th>"
+            <<  "<th data-sort='number'     class='sortByStock'>"    <<  "Verfügbar"     <<  "</th>"
+            <<  endl;
+
+    if(mode == " "){
+        stream  <<  "<th class='no-sort'>"   <<  "Menge"         <<  "</th>"
+                <<  endl;
+    }
+
+    stream  <<  "</tr>"
+            <<  "</thead>"
+            <<  "<tbody>"
+            <<  endl;
+
+    while(query.next()){
+        pid = query.value(0).toInt();
+        title = query.value(1).toString().toStdString();
+        price = query.value(2).toDouble();
+        stock = query.value(3).toInt();
+        stream  <<  "<tr>"
+                <<  endl;
+        if(mode == "checkboxes"){
+            stream  <<  "<td>"      <<  "<input type='checkbox' name='wareSelect' id='user"
+                    <<  pid         <<  "' value='"  <<     pid          <<  "'>"
+                    <<  "</td>"
+                    <<  endl;
+        }
+        stream  <<  "<td>"      <<  pid       <<    "</td>"
+                <<  "<td>"      <<  title     <<    "</td>"
+                <<  "<td>"      <<  price     <<    "</td>"
+                <<  "<td>"      <<  stock     <<    "</td>"
+                <<  endl;
+
+        if(mode == " "){
+            stream  <<  "<td>"      <<  "<input type='text' value='0' id='cartItemAmount"  <<   pid  <<  "'>"
+                    <<  "<button class='orange-button' id='buyCartItem"                    <<   pid  <<  "'>"
+                    <<  "in den <span class='fa fa-shopping-cart'></span></button>"        <<   "</td>"
+                    <<  endl;
+        }
+
+        stream  <<  "</tr>"
+                <<  endl;
+
+        // Das funktioniert nur, weil alle ItemIds ab 1 vorkommen
+        // und die SQL-Tabelle genau in dieser Reihenfolge sortiert ist.
+    }
+
+    stream  <<  "</tbody>"
+            <<  "</table>"  <<  endl;
+
+    if(mode == "checkboxes"){
+        stream  <<  "<p>"
+                <<  "<input type='checkbox' id='wareSelect' class='selectAll'>"
+                <<  "Alle auswählen </p>"
+                <<  endl;
+    }
+
 
     string s = stream.str();
 
@@ -463,12 +565,13 @@ void sqlfunctions::registerUser(QString username, QString password, QString repe
         int insertId = query.value(0).toInt();
         // Usernummer um 1 erhöhen
         insertId++;
-        query.prepare("INSERT INTO users (id, username, password, balance, isAdmin) VALUES (:insertId, :username, :password, :balance, :isAdmin)");
+        query.prepare("INSERT INTO users (id, username, password, balance, isAdmin, changePasswordMode) VALUES (:insertId, :username, :password, :balance, :isAdmin, :changePasswordMode)");
         query.bindValue(":id", insertId);
         query.bindValue(":username", username);
         query.bindValue(":password", password);
         query.bindValue(":balance", 0);
         query.bindValue(":isAdmin", 0);
+        query.bindValue(":changePasswordMode", "n");
         query.exec();
         QMessageBox msgBox;
         msgBox.setText("Herzlichen Dank für Ihre Registrierung.");
@@ -483,33 +586,6 @@ void sqlfunctions::registerUser(QString username, QString password, QString repe
     }
 }
 
-// Geld auf User-Account laden
-void sqlfunctions::refillBalance(double amount){
-    if(!isLogin){
-        QMessageBox msgBox;
-        msgBox.setText("Es ist kein User eingeloggt!");
-        msgBox.exec();
-        return;
-    }
-    QSqlQuery query;
-    query.prepare("SELECT balance FROM users WHERE id = :uid");
-    query.bindValue(":uid", uid);
-    query.exec();
-    query.next();
-    double balance = query.value(0).toDouble();
-    balance += amount;
-    query.prepare("UPDATE users SET balance=:newBalance WHERE id=:uid");
-    query.bindValue(":newBalance", balance);
-    query.bindValue(":uid", uid);
-    query.exec();
-
-    QMessageBox msgBox;
-    msgBox.setText("Ihr Guthaben wurde erfolgreich um "+QString::number(amount)+" aufgelden. Es beträgt nun insgesamt "+QString::number(balance)+".");
-    msgBox.exec();
-
-    emit balanceChanged(amount);
-}
-
 // gibt Tabelle mit allen Usern für Adminstration aus
 QString sqlfunctions::listAllUsers(){
 
@@ -522,27 +598,30 @@ QString sqlfunctions::listAllUsers(){
             <<  "<th class='no-sort'></th>"
             <<  "<th data-sort='number'>"          <<  "ID"                <<  "</th>"
             <<  "<th data-sort='name'>"            <<  "Benutzername"      <<  "</th>"
-            <<  "<th data-sort='name'>"            <<  "Passwort"          <<  "</th>"
+            //<<  "<th data-sort='name'>"            <<  "Passwort"          <<  "</th>"
             <<  "<th data-sort='number'>"          <<  "Guthaben"          <<  "</th>"
             <<  "<th data-sort='number'>"          <<  "Admin?"            <<  "</th>"
+            <<  "<th data-sort='number'>"          <<  "PermBl?"            <<  "</th>"
             <<  "</tr>"
             <<  "</thead>"
             <<  "<tbody>"
             << endl;
 
-    query.prepare("SELECT * FROM users ORDER BY users.id ASC");
+    query.prepare("SELECT id,username,balance,isAdmin,isBlockedPermanently FROM users ORDER BY users.id ASC");
     query.exec();
 
-    int id, isAdmin;
+    int id, isAdmin, isBlockedPermanently;
     double balance;
-    string username, password;
+    string username;
+    // string password;
 
     while(query.next()){
         id          =   query.value(0).toInt();
         username    =   query.value(1).toString().toStdString();
-        password    =   query.value(2).toString().toStdString();
-        balance     =   query.value(3).toDouble();
-        isAdmin     =   query.value(4).toInt();
+        //password    =   query.value(2).toString().toStdString();
+        balance     =   query.value(2).toDouble();
+        isAdmin     =   query.value(3).toInt();
+        isBlockedPermanently = query.value(4).toInt();
 
         stream  <<  "<tr>"
                 <<  "<td>"      <<  "<input type='checkbox' name='userSelect' id='user"
@@ -550,9 +629,10 @@ QString sqlfunctions::listAllUsers(){
                 <<  "</td>"
                 <<  "<td>"      <<  id           <<    "</td>"
                 <<  "<td>"      <<  username     <<    "</td>"
-                <<  "<td>"      <<  password     <<    "</td>"
+                //<<  "<td>"      <<  password     <<    "</td>"
                 <<  "<td>"      <<  balance      <<    "</td>"
                 <<  "<td>"      <<  isAdmin      <<    "</td>"
+                <<  "<td>"      <<  isBlockedPermanently      <<    "</td>"
                 <<  "</tr>"
                 <<  endl;
     }
@@ -573,15 +653,295 @@ QString sqlfunctions::listAllUsers(){
     return htmlOutput;
 }
 
-// GIBT USER ADMIN-PRIVILLEGIEN
+// Gibt User Admin-Privillegien
 // Auswirkung: Zeige Admin-Menüpunkte und Optionen in App
 void sqlfunctions::empowerUser(int id){
+    QSqlQuery query;
+    query.prepare("UPDATE users SET isAdmin=1 WHERE id=:uid");
+    query.bindValue(":uid", id);
+    query.exec();
 }
 
-// NIMMT USER ADMIN-PRIVILLEGIEN
+// Nimmt User Admin-Privillegien
 // Auswirkung: Verstecke Admin-Menüpunkte und Optionen in App
 void sqlfunctions::disempowerUser(int id){
+    QSqlQuery query;
+    query.prepare("SELECT isSuperAdmin FROM users WHERE id = :uid");
+    query.bindValue(":uid", id);
+    query.exec();
+    query.next();
+    bool isSuperAdmin = query.value(0).toBool();
+
+    if(isSuperAdmin){
+        QMessageBox msgBox;
+        msgBox.setText("Dieser User ist ein Super-Admin. Diese sind immun.");
+        return;
+    }
+    else{
+        QMessageBox msgBox;
+        msgBox.setText("Yolo, Biatch!");
+    }
+
+    query.prepare("UPDATE users SET isAdmin=0 WHERE id=:uid");
+    query.bindValue(":uid", id);
+    query.exec();
 }
+
+// blockt Account temporär
+void sqlfunctions::blockAccount(int id, int hours){
+    QDateTime blockedUntil = QDateTime::currentDateTime().addSecs(3600*hours);
+    QSqlQuery query;
+    query.prepare("UPDATE users SET blockedUntil = :blockedUntil WHERE id = :id");
+    query.bindValue(":id", id);
+    query.bindValue(":blockedUntil", blockedUntil);
+    query.exec();
+
+    QMessageBox msgBox;
+    msgBox.setText("Der Account mit der id "+QString::number(id)+" wurde für "+ QString::number(hours) +" Stunden geblockt.");
+    msgBox.exec();
+}
+
+// blockt Account dauerhaft
+void sqlfunctions::blockAccountPermanently(int id){
+    QSqlQuery query;
+    query.prepare("UPDATE users SET isBlockedPermanently = 1 WHERE id = :id");
+    query.bindValue(":id", id);
+    query.exec();
+
+    QMessageBox msgBox;
+    msgBox.setText("Der Account mit der id "+QString::number(id)+" wurde permanent geblockt.");
+    msgBox.exec();
+}
+
+// entblockt Account
+void sqlfunctions::unblockAccount(int id){
+    QDateTime blockedUntil = QDateTime::currentDateTime();
+    // temporären Block entfernen
+    QSqlQuery query;
+    query.prepare("UPDATE users SET blockedUntil = :blockedUntil WHERE id = :id");
+    query.bindValue(":id", id);
+    query.bindValue(":blockedUntil", blockedUntil);
+    query.exec();
+
+    // dauerhaften Block entfernen
+    query.prepare("UPDATE users SET isBlockedPermanently = 0 WHERE id = :id");
+    query.bindValue(":id", id);
+    query.exec();
+
+    QMessageBox msgBox;
+    msgBox.setText("Der Account mit der id "+QString::number(id)+" wurde wieder freigeschaltet.");
+    msgBox.exec();
+}
+
+// löscht Account
+void sqlfunctions::terminateAccount(int id){
+    QMessageBox msgBox;
+    msgBox.setText("Achtung Account-Terminierung!");
+    msgBox.setInformativeText("Wollen Sie diese(n) Account(s) wirklick terminieren? Diese Aktion ist endgültig.");
+    msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+    msgBox.setDefaultButton(QMessageBox::No);
+
+    int answer = msgBox.exec();
+    if(answer == QMessageBox::Yes){
+        msgBox.setText("Yes was clicked");
+        msgBox.exec();
+        QSqlQuery query;
+        query.prepare("DELETE FROM users WHERE id=:uid");
+        query.bindValue(":uid", id);
+        query.exec();
+    }
+    else if(answer == QMessageBox::No){
+        msgBox.setText("Nichts ausgeführt.");
+        msgBox.exec();
+    }
+}
+
+// ändert Guthaben eines Accounts
+
+void sqlfunctions::changeBalance(int id, QString mode, double number){
+
+    if(!isLogin){
+        QMessageBox msgBox;
+        msgBox.setText("Es ist kein User eingeloggt!");
+        msgBox.exec();
+        return;
+    }
+
+    QSqlQuery query;
+    query.prepare("SELECT balance FROM users WHERE id=:id");
+    query.bindValue(":id", id);
+    query.exec();
+    query.next();
+    double balance = query.value(0).toDouble();
+
+    QMessageBox msgBox;
+    if(mode == "add"){
+        balance += number;
+        msgBox.setText("Ihr Guthaben wurde erfolgreich um "+QString::number(number)+" aufgelden. Es beträgt nun insgesamt "+QString::number(balance)+".");
+        msgBox.exec();
+        emit balanceChanged(number);
+    }
+    else if(mode == "set"){
+        int oldBalance = balance;
+        balance = number;
+        msgBox.setText("Ihr Guthaben wurde erfolgreich auf"+QString::number(number)+" aufgeladen.");
+        msgBox.exec();
+        emit balanceChanged(oldBalance - balance);
+    }
+    else if(mode == "scale"){
+        int oldBalance = balance;
+        balance *= number;
+        msgBox.setText("Ihr Guthaben wurde erfolgreich um den Faktor"+QString::number(number)+" skaliert. Es beträgt nun insgesamt "+QString::number(balance)+".");
+        msgBox.exec();
+        emit balanceChanged(oldBalance - balance);
+    }
+
+    query.prepare("UPDATE users SET balance=:balance WHERE id=:id");
+    query.bindValue(":balance", balance);
+    query.bindValue(":id", id);
+    query.exec();
+}
+
+// Passwort ändern
+
+void sqlfunctions::changePassword(int id, QString mode){
+    QString newMode;
+    QSqlQuery query;
+    if(mode == "request"){
+        newMode = "r";
+    }
+    if(mode == "force"){
+        newMode = "f";
+    }
+    query.prepare("UPDATE users SET changePasswordMode=:mode WHERE id=:id");
+    query.bindValue(":id", id);
+    query.bindValue(":mode", newMode);
+    query.exec();
+}
+
+void sqlfunctions::changePassword(int id, QString mode, QString password){
+    QString newMode;
+    QSqlQuery query;
+
+    if(mode == "set"){
+        query.prepare("UPDATE users SET password=:password WHERE id=:id");
+        query.bindValue(":id", id);
+        query.bindValue(":password", password);
+        query.exec();
+        newMode = "n";
+    }
+
+    query.prepare("UPDATE users SET changePasswordMode=:mode WHERE id=:id");
+    query.bindValue(":id", id);
+    query.bindValue(":mode", newMode);
+    query.exec();
+}
+
+bool sqlfunctions::userChangesPassword(int id, QString password, QString passwordRepeated){
+    if(password != passwordRepeated){
+        QMessageBox msgBox;
+        msgBox.setText("Die eingegebenen Passwörter stimmen nicht überein.");
+        return false;
+    }
+    else{
+        QSqlQuery query;
+        query.prepare("UPDATE users SET password = :password WHERE id = :id");
+        query.bindValue(":password", password);
+        query.bindValue(":id", id);
+        query.exec();
+        return true;
+    }
+}
+
+void sqlfunctions::deleteWareRecord(int id){
+    QMessageBox msgBox;
+    msgBox.setText("Achtung Waren-Löschung!");
+    msgBox.setInformativeText("Wollen Sie diese Waren(n) wirklick löschen? Diese Aktion ist endgültig.");
+    msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+    msgBox.setDefaultButton(QMessageBox::No);
+
+    int answer = msgBox.exec();
+    if(answer == QMessageBox::Yes){
+        msgBox.setText("Das Produkt wurde erfolgreich gelöscht.");
+        msgBox.exec();
+        QSqlQuery query;
+        query.prepare("DELETE FROM products WHERE id=:id");
+        query.bindValue(":id", id);
+        query.exec();
+    }
+    else if(answer == QMessageBox::No){
+        msgBox.setText("Aktion vom Benutzer abgebrochen.");
+        msgBox.exec();
+    }
+}
+
+void sqlfunctions::createWareRecord(){
+}
+
+void sqlfunctions::changeStock(int id, QString mode, double number){
+    QSqlQuery query;
+    query.prepare("SELECT stock, title FROM products WHERE id=:id");
+    query.bindValue(":id", id);
+    query.exec();
+    query.next();
+    double stock = query.value(0).toDouble();
+    QString title = query.value(1).toString();
+
+    QMessageBox msgBox;
+    if(mode == "add"){
+        stock += number;
+        msgBox.setText("Die Menge von "+ title +" wurde um "+QString::number(number)+" erhöht. Es beträgt nun insgesamt "+QString::number(stock)+".");
+        msgBox.exec();
+        emit stockChanged(number);
+    }
+    else if(mode == "set"){
+        int oldStock = stock;
+        stock= number;
+        msgBox.setText("Die Menge von "+ title +" wurde auf "+QString::number(number)+" gesetzt.");
+        msgBox.exec();
+        emit stockChanged(oldStock - stock);
+    }
+    else if(mode == "scale"){
+        int oldStock = stock;
+        stock *= number;
+        msgBox.setText("Die Menge von"+ title +" wurde um den Faktor "+ QString::number(number)+" skaliert. Er beträgt nun insgesamt "+QString::number(stock)+".");
+        msgBox.exec();
+        emit stockChanged(oldStock - stock);
+    }
+}
+
+void sqlfunctions::changeWarePrice(int id, QString mode, double number){
+    QSqlQuery query;
+    query.prepare("SELECT price, title FROM products WHERE id=:id");
+    query.bindValue(":id", id);
+    query.exec();
+    query.next();
+    double price = query.value(0).toDouble();
+    QString title = query.value(1).toString();
+
+    QMessageBox msgBox;
+    if(mode == "add"){
+        price += number;
+        msgBox.setText("Der Preis von "+ title +" wurde um "+QString::number(number)+" erhöht. Es beträgt nun insgesamt "+QString::number(price)+".");
+        msgBox.exec();
+        emit priceChanged(number);
+    }
+    else if(mode == "set"){
+        int oldPrice = price;
+        price= number;
+        msgBox.setText("Der Preis von "+ title +" wurde auf "+QString::number(number)+" gesetzt.");
+        msgBox.exec();
+        emit priceChanged(oldPrice - price);
+    }
+    else if(mode == "scale"){
+        int oldPrice = price;
+        price *= number;
+        msgBox.setText("Der Preis von"+ title +" wurde um den Faktor "+ QString::number(number)+" skaliert. Er beträgt nun insgesamt "+QString::number(price)+".");
+        msgBox.exec();
+        emit priceChanged(oldPrice - price);
+    }
+}
+
 
 double sqlfunctions::getCurrentCartValue(){
     return currentCartValue;
@@ -620,6 +980,8 @@ double sqlfunctions::getBalance(){
 bool sqlfunctions::login(QString username, QString password){
     // Timeout bei mehrfach falscher Eingabe
     time_t timeNow = time(0);
+
+
     if(allowedAgain > timeNow && badTries > 2){
         time_t difference = allowedAgain - timeNow;
         QMessageBox msgBox;
@@ -630,11 +992,25 @@ bool sqlfunctions::login(QString username, QString password){
 
     QSqlQuery query;
     // Prüfen, ob Username-Password-Kombination existiert
-    query.prepare("SELECT username FROM users WHERE password = :password");
+    query.prepare("SELECT username, isBlockedPermanently, blockedUntil FROM users WHERE password = :password");
     query.bindValue(":password", password);
     bool accountExists = query.exec();
     query.next();
     QString receivedUsername = query.value(0).toString();
+    bool isBlockedPermanently = query.value(1).toBool();
+    QDateTime blockedUntil = query.value(2).toDateTime();
+    if(isBlockedPermanently){
+        QMessageBox msgBox;
+        msgBox.setText("Ihr Account wurde wegen Verstoßes gegen die AGB dauerhaft geblockt. Falls Sie hier einen Fehler vermuten, kontaktieren Sie bitte den Support!");
+        msgBox.exec();
+        return false;
+    }
+    if(blockedUntil >= QDateTime::currentDateTime()){
+        QMessageBox msgBox;
+        msgBox.setText("Ihr Account ist temporär gebannt. Sie können sich zu folgender Zeit wieder einloggen: "+blockedUntil.toString()+" !");
+        msgBox.exec();
+        return false;
+    }
     bool credentialsMatch = false;
     if(receivedUsername.toStdString() == username.toStdString()){
         credentialsMatch = true;
@@ -646,6 +1022,28 @@ bool sqlfunctions::login(QString username, QString password){
     // Überprüft ob Account existiert, Passwort/Benutzername-Kombination stimmt
     // und ob ein nicht leerer Benutzername eingegeben wurde.
     if(accountExists && credentialsMatch && username.toStdString()!=""){
+        query.prepare("SELECT changePasswordMode FROM users WHERE username = :username");
+        query.bindValue(":username", username);
+        query.exec();
+        query.next();
+        QString changePasswordMode = query.value(0).toString();
+        QMessageBox msgBox;
+
+        // Testfunktion
+        // msgBox.setText(changePasswordMode);
+        // msgBox.exec();
+
+        if(changePasswordMode.toStdString() != "n"){
+            if(changePasswordMode.toStdString() == "f"){
+                msgBox.setText("Ändern Sie umgehend Ihr Passwort!");
+                msgBox.exec();
+            }
+            else if(changePasswordMode.toStdString() == "r"){
+                msgBox.setText("Ändern Sie bitte Ihr Passwort!");
+                msgBox.exec();
+            }
+        }
+
         // Member uid für Einkauf setzen
         query.prepare("SELECT id FROM users WHERE username =:username");
         query.bindValue(":username", username);
@@ -745,6 +1143,12 @@ void sqlfunctions::testJs(){
 void sqlfunctions::testCpp(){
     QMessageBox msgBox;
     msgBox.setText("Dieser Code wurde ausgeführt!");
+    msgBox.exec();
+}
+
+void sqlfunctions::testCpp2(){
+    QMessageBox msgBox;
+    msgBox.setText("Dieser andere Code wurde ausgeführt!");
     msgBox.exec();
 }
 
