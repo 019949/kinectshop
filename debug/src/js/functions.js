@@ -39,18 +39,6 @@ $(document).ready(function(){
         var title = $(this).parent().siblings().eq(1).text();
         if(amount > 0){
             mySqlObj.addToCart(pid, amount, price, title);
-            $("#product-display").html(mySqlObj.showCart());
-            var currentCartValue = mySqlObj.getCurrentCartValue();
-            if(mySqlObj.getLogin()){
-                var balance = mySqlObj.getBalance();
-                if(balance < currentCartValue){
-                    $("#acc-cart .accdd").addClass("red-font");
-                }
-                else{
-                    $("#acc-cart .accdd").removeClass("red-font");
-                }
-            }
-            $("#acc-cart .accdd").html(currentCartValue);
             // Testfunktion
             alert("Das Produkt ist: "+title+"\nDie Produkt ID ist: "+pid+"\nDie Menge ist: "+amount+"\nDer Preis pro Stück ist: "+price);
         }
@@ -330,5 +318,28 @@ $(document).ready(function(){
         automaton.transitions(input);
     });
 });
+
+// ------------------- //////////////////////////////////////////////////////////////////
+
+// Qt-Funktionen-Connect ////////////////////////////////////////////////////////////////
+
+function myFunc(){
+    alert("The cart changed!");
+
+    $("#product-display").html(mySqlObj.showCart());
+    var currentCartValue = mySqlObj.getCurrentCartValue();
+    if(mySqlObj.getLogin()){
+        var balance = mySqlObj.getBalance();
+        if(balance < currentCartValue){
+            $("#acc-cart .accdd").addClass("red-font");
+        }
+        else{
+            $("#acc-cart .accdd").removeClass("red-font");
+        }
+    }
+    $("#acc-cart .accdd").html(currentCartValue);
+}
+
+mySqlObj.cartChanged.connect(myFunc);
 
 // ------------------- //////////////////////////////////////////////////////////////////

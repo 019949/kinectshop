@@ -307,7 +307,7 @@ QString sqlfunctions::showCart(){
     string s = stream.str();
 
     // Testfunnktion
-    // cout << s << endl;
+    cout << s << endl;
 
     QString htmlOutput = QString::fromStdString(s);
     return htmlOutput;
@@ -1157,12 +1157,3 @@ void sqlfunctions::testSql(QString a, QString b, QString c){
     msgBox.setText("Erstes Argument: "+a +"\nZweites Argument: "+b + "\nDrittes Argument: "+c);
     msgBox.exec();
 }
-
-// ----------------------------------------------------------------------------------
-// ---------------------------------------SIGNALE------------------------------------
-// ----------------------------------------------------------------------------------
-/*
-void sqlfunctions::cartChanged(){
-    return;
-}
-*/

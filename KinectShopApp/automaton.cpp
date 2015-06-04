@@ -3,7 +3,7 @@
 automaton::automaton(QObject *parent) :
     QObject(parent)
 {
-    connect(this,SIGNAL(stateChanged(int)),this,SLOT(transitions(int)));
+    //connect(this,SIGNAL(stateChanged(int)),this,SLOT(transitions(int)));
 
     state idle;
     idle.setId(0);
@@ -14,7 +14,7 @@ automaton::automaton(QObject *parent) :
     pid = 2;
 
     // Testfunktion
-    qDebug() << currentState.getId();
+    // qDebug() << currentState.getId();
 }
 
 // ///////////////////// Transitions /////////////////////
@@ -97,7 +97,7 @@ void automaton::transitions(int input){
             query.next();
             double price = query.value(0).toDouble();
             QString title = query.value(1).toString();
-            connectedObj->sqlfunctions::addToCart(pid,amount,price,title);
+            connectedObj->addToCart(pid,amount,price,title);
             break;
         }
         case BACK:
@@ -130,6 +130,12 @@ void automaton::transitions(int input){
         qDebug() << "FEHLER: switch";
         break;
     }
+}
+
+
+void automaton::receiveInput(int input){
+    receivedInput = input;
+    emit inputReceived(currentState, input);
 }
 
 // ///////////////////////////////////////////////////////

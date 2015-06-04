@@ -4,13 +4,13 @@
 class state{
 public:
     state();
-    void    setStateInfo(int info);
-    int     getStateInfo();
-    void    setId(unsigned int newId);
-    int     getId();
+    void            setStateInfo(int info);
+    int             getStateInfo();
+    void            setId(unsigned int newId);
+    int             getId();
 private:
-    int              stateInfo;
-    unsigned int     id;
+    int             stateInfo;
+    unsigned int    id;
 };
 
 #endif // STATE_H
