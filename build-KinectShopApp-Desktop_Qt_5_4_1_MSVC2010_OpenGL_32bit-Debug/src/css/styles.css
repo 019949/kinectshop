@@ -1,0 +1,363 @@
+/*Nachher noch normalize.css einbinden*/
+
+/* ***************** BEGIN Global *************** */
+
+*{
+    box-sizing:border-box;
+    padding:0;
+    margin:0;
+}
+
+h1{
+    margin: 1.4em 0 1em 0;
+}
+
+h2{
+    margin: 1.2em 0 0.8em 0;
+}
+
+h3{
+    margin: 0.9em 0 0.65em 0;
+}
+
+table{
+    width:100%;
+}
+
+.active{
+    display:block;
+}
+
+.inactive{
+    display:none;
+}
+
+.current{
+    background:rgb(250,120,60) !important;
+    color:#fff;
+}
+
+.sortable th:not(.descending):not(.ascending):not(.no-sort):after {
+    margin-left:7px;
+    content:'\f0dc';
+    font-family:'FontAwesome';
+}
+
+.sortable .descending:after{
+    margin-left:7px;
+    content:'\f0dd';
+    font-family:'FontAwesome';
+}
+
+.sortable .ascending:after{
+    margin-left:7px;
+    content:'\f0de';
+    font-family:'FontAwesome';
+}
+
+/* *****************  END Global  *************** */
+
+/* ***************** BEGIN Struktur *************** */
+body{
+    background:#fff;
+}
+
+#wrapper{
+}
+
+#main{
+}
+
+#content-wrapper{
+    position:relative;
+    top: 100px;
+
+    height: 700px;
+    max-height: 700px;
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    display:inline-block;
+    width:100%;
+    background:#fff;
+}
+
+#left-nav, #content{
+    display:inline-block;
+    vertical-align:top;
+    margin-bottom:20px;
+}
+
+#left-nav{
+    width:30%;
+    border-radius:5px;
+
+    position:fixed;
+    top:108px;
+}
+
+#left-nav ul#left-nav-menu{
+    margin:0 0 10px 0;
+    padding:10px 10px;
+
+    list-style-type:none;
+}
+
+#left-nav ul#left-nav-menu li{
+    padding:10px 20px;
+}
+
+#left-nav ul#left-nav-menu li:first-child{
+    -webkit-border-top-left-radius: 5px;
+    -webkit-border-top-right-radius: 5px;
+    -moz-border-radius-topleft: 5px;
+    -moz-border-radius-topright: 5px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
+#left-nav ul#left-nav-menu li:last-child{
+    -webkit-border-bottom-right-radius: 5px;
+    -webkit-border-bottom-left-radius: 5px;
+    -moz-border-radius-bottomright: 5px;
+    -moz-border-radius-bottomleft: 5px;
+    border-bottom-right-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+
+#left-nav ul#left-nav-menu li:nth-child(odd){
+  background: rgba(220, 240, 255, 0.3);
+}
+
+#left-nav ul#left-nav-menu li:nth-child(even){
+  background: rgba(169, 218, 255, 0.3);
+}
+
+#content{
+    margin:0 0 0 30%;
+    padding:20px 20px;
+    width:70%;
+}
+
+.section{
+}
+
+
+#content ol, #content ul{
+    margin: auto 30px;
+}
+
+#header{
+    height:100px;
+    background:rgb(160,220,255);
+    background:url("../img/chocolate.jpg");
+
+    position:fixed;
+    width:100%;
+    top:0;
+    z-index:1000;
+}
+
+#footer{
+    padding:10px 10px;
+    height:100px;
+    width:100%;
+    background:#555;
+    color:#fff;
+
+    position:fixed;
+    bottom:0;
+    z-index:1000;
+}
+
+#quit{
+    float:right;
+    text-align: right;
+}
+
+/* *****************  END Struktur  *************** */
+
+/* ***************** BEGIN Styling *************** */
+
+/* Text allgemein */
+p{
+    margin: 0 0 0.5em 0;
+}
+
+.red-font{
+    color:#f00;
+}
+
+/* Text spezifisch */
+
+#title{
+    color:#fff;
+    text-align:center;
+    padding:10px;
+    margin:0;
+    background:rgba(0,0,0,0.4);
+    position:absolute;
+    top:20px;
+    left:10px;
+    font-family:"Indie Flower";
+    border-radius:5px;
+}
+
+#total-preview td{
+    background: rgb(250,120,60);
+    color:#fff;
+    font-weight:bold;
+}
+
+tr.orange td{
+    background: rgb(250,120,60) !important;
+    color:#fff;
+}
+
+/* Tabellen allgemein */
+table{
+    border-collapse:collapse;
+}
+
+td, th{
+    padding:7px 14px;
+}
+
+thead tr{
+    background:#002;
+    color:#fff;
+}
+
+thead tr th:first-child{
+    -webkit-border-top-left-radius: 5px;
+    -moz-border-radius-topleft: 5px;
+    border-top-left-radius: 5px;
+}
+
+thead tr th:last-child{
+    -webkit-border-top-right-radius: 5px;
+    -moz-border-radius-topright: 5px;
+    border-top-right-radius: 5px;
+}
+
+tbody tr:nth-child(even) td{
+    background:#555;
+    color:#fff;
+}
+
+tbody tr:nth-child(odd) td{
+    background: #fff;
+}
+
+/* Tabellen spezifisch */
+
+#products{
+    width: 100%;
+}
+
+/* Login */
+
+.input-prepend{
+    position:relative;
+    display:table;
+    border-collapse:separate;
+    margin:5px 0;
+}
+
+.input-prepend .fa{
+    padding: 10px 7px 10px 10px;
+    background: #fff;
+    background: rgba(255,255,255,0.6);
+    border-radius: 5px 0 0 5px;
+    color: #333;
+    height:40px;
+    width:35px;
+}
+
+.input-prepend.orange{
+    border: 1px solid rgb(230,120,60);
+    border-radius:5px;
+}
+
+.input-prepend.orange .fa{
+    background: rgb(250,120,60);
+    border:none;
+    margin:0;
+    color:#fff;
+}
+
+.input-prepend input{
+    border:none;
+    height:40px;
+    line-height:40px;
+    border-radius: 0 5px 5px 0;
+    padding: 3px 7px;
+}
+
+/* Sonstiges */
+
+.blue-button{
+    padding:7px 14px;
+    border-radius:5px;
+    color:#fff;
+    box-shadow: inset 0px 1px 0px 0px rgb(4,192,239);
+    border: 1px solid #222760;
+    background: rgb(3,113,168);
+}
+
+.orange-button{
+    padding:7px 14px;
+    border-radius:5px;
+    color:#fff;
+    box-shadow: inset 0px 1px 0px 0px rgb(255,160,80);
+    border: 1px solid rgb(150,70,30);
+    background: rgb(250,120,60);
+}
+
+input[id^=cartItemAmount], input[id^=itemAmount]{
+    width:50px;
+    height:30px;
+    margin:0 5px;
+    vertical-align:middle;
+}
+
+input[id^=itemAmount]{
+    margin:auto auto auto 15px;
+}
+
+button[id^=buyCartItem], button[id^=removeItem]{
+    height:30px;
+    vertical-align:middle;
+}
+
+#productList, #cartList{
+    width:100%;
+    margin: 10px 0;
+}
+
+/* Footer */
+
+#account-data{
+}
+
+.account-data-block{
+    display:inline-block;
+    height:50px;
+    line-height:50px;
+    font-size:25px;
+    padding: 0 15px;
+}
+
+/* *****************  END Styling  *************** */
+
+/* ******************  BEGIN Test  *************** */
+
+.testblock-large{
+    height:2000px;
+    display:block;
+    padding:10px;
+    background:rgb(250,160,80);
+    color:#fff;
+}
+
+/* *******************  END Test  **************** */

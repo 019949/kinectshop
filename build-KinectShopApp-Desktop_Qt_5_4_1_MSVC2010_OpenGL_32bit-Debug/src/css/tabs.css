@@ -1,0 +1,59 @@
+.tabs {
+        display: block;
+        list-style: none;
+        position: relative;
+        top:-10px;
+        margin: 0 0 0 10px;
+        padding-left:0;
+        text-align: left;
+}
+
+.tabs li {
+  display: inline-block;
+}
+
+.tabs input[type="radio"] {
+  position: absolute;
+  top: -9999px;
+  left: -9999px;
+  visibility: hidden;
+}
+
+.tabs label {
+  display: block;
+  padding: 14px 21px;
+  border-radius: 5px 5px 0 0;
+  margin: 0 5px 0 0;
+  font-size: 16px;
+  background: rgba(220, 240, 255, 0.3);
+  cursor: pointer;
+  position: relative;
+  top: 6px;
+}
+
+.tabs label:hover {
+  background: rgba(0, 126, 220, 0.3);
+}
+
+.tabs .tab-content {
+  z-index: 2;
+  display: none;
+  overflow: hidden;
+  width: 100%;
+  font-size: 17px;
+  line-height: 25px;
+  padding: 25px;
+  position: absolute;
+  top: 53px;
+  left: 0;
+  background: rgba(169, 218, 255, 0.3);
+  border-radius:0 5px 5px 5px;
+}
+
+.tabs [id^="tab"]:checked + label {
+  background: rgba(169, 218, 255, 0.3);
+}
+
+.tabs [id^="tab"]:checked ~ [id^="tab-content"] {
+  display: block;
+}

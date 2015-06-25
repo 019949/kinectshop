@@ -3,10 +3,14 @@
 #include <QGraphicsWebView>
 #include <QWebFrame>
 #include <QtWebKit>
+#include <QLabel>
 
 #include "html5applicationviewer.h"
 
+//#include <NuiApi.h>
+
 #include "sqlfunctions.h"
+#include "label.h"
 #include "automaton.h"
 
 int main(int argc, char *argv[])
@@ -14,6 +18,11 @@ int main(int argc, char *argv[])
     QApplication app(argc, argv);
 
     sqlfunctions obj;
+
+    QLabel color;
+    Label label(&color);
+    color.show();
+
 
     // Sprachsteuerung des Automaten //////////////////////////////////////////////////////////////////
     automaton automA;

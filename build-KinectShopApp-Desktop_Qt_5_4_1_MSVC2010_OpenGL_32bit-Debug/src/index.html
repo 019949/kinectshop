@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+        <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Indie+Flower">
+
+        <link rel="stylesheet" type="text/css" href="css/styles.css">
+        <link rel="stylesheet" type="text/css" href="css/tabs.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+
+        <script type="text/javascript" src="js/jquery.min.js"></script>
+        <script type="text/javascript" src="js/functions.js"></script>
+    </head>
+
+    <body>
+        <div id="wrapper">
+            <div class="main">
+                <header id="header">
+                    <span class="fa-stack fa-lg" id="quit">
+                      <span class="fa fa-circle fa-stack-2x"></span>
+                      <span class="fa fa-close fa-stack-1x fa-inverse"></span>
+                    </span>
+                    <h1 id="title">
+                        Kinect-Süßigkeiten-Shop
+                    </h1>
+                </header>
+                <div id="content-wrapper">
+                    <nav id="left-nav">
+                        <ul id="left-nav-menu">
+                            <li title="start">
+                                <span class="fa fa-home"></span>
+                                Startseite
+                            </li>
+                            <li title="products">
+                                <span class="fa fa-bars"></span>
+                                Produktübersicht
+                            </li>
+                            <li title="shop">
+                                <span class="fa fa-money"></span>
+                                Shop
+                            </li>
+                            <li title="cart">
+                                <span class="fa fa-shopping-cart"></span>
+                                Warenkorb
+                            </li>
+                            <li title="kinect">
+                                <span class="fa fa-camera"></span>
+                                Kinect
+                            </li>
+                            <li title="account-profile">
+                                <span class="fa fa-user"></span>
+                                Accountprofil
+                            </li>
+                            <li title="admin-area" class="inactive">
+                                <span class="fa fa-star"></span>
+                                Shopverwaltung
+                            </li>
+                        </ul>
+
+                        <ul class="tabs">
+                            <li>
+                                <input type="radio" name="tabs" id="tab1" checked>
+                                <label for="tab1">
+                                    <span class="fa fa-sign-in"></span>
+                                    <span class="tab-text">Login</span>
+                                </label>
+                                <div id="tab-content1" class="tab-content">
+                                    <div class="formbody">
+                                        <div id="login-form" class="active">
+                                            <div class="input-prepend">
+                                                <span class="fa fa-user"></span>
+                                                <input id="username" type="text" name="username" placeholder="Benutzername" value required>
+                                            </div>
+                                            <div class="input-prepend">
+                                                <span class="fa fa-key"></span>
+                                                <input id="password" type="password" name="password" placeholder="Passwort" value required>
+                                            </div>
+
+                                            <input type="submit" value="anmelden" id="login" class="blue-button">
+                                        </div>
+                                        <div id="logout-form" class="inactive">
+                                            <input type="submit" value="abmelden" id="logout" class="blue-button">
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li>
+                                <input type="radio" name="tabs" id="tab2">
+                                <label for="tab2">
+                                    <span class="fa fa-gear"></span>
+                                    <span class="tab-text">Accountverwaltung</span>
+                                </label>
+                                <div id="tab-content1" class="tab-content">
+                                    <div id="register-form" class="active">
+                                        <div class="input-prepend">
+                                            <span class="fa fa-user"></span>
+                                            <input id="rUsername" type="text" name="username" placeholder="Benutzername" value required>
+                                        </div>
+                                        <div class="input-prepend">
+                                            <span class="fa fa-key"></span>
+                                            <input id="rPassword" type="password" name="password" placeholder="Passwort" value required>
+                                        </div>
+                                        <div class="input-prepend">
+                                            <span class="fa fa-key"></span>
+                                            <input id="rPasswordRepeated" type="password" name="password" placeholder="Passwort wiederholen" value required>
+                                        </div>
+
+                                        <button class="blue-button" id="register">
+                                            Registrieren
+                                        </button>
+                                    </div>
+
+                                    <br>
+
+                                    <div id="refillBalance-form">
+                                        <div class="input-prepend">
+                                            <span class="fa fa-money"></span>
+                                            <input id="amount" type="text" placeholder="Betrag" value required>
+                                        </div>
+                                        <button class="blue-button" id="refillBalance">
+                                            Guthaben aufladen
+                                        </button>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+
+                    </nav><!--
+                 --><div id="content">
+                         <div class="section active" id="start">
+                            <p>
+                                Willkommen im Kinect-Süßigkeiten-Shop!<br>
+                                Fast alle Features müssen noch implementiert werden!
+                            </p>
+                            <p>
+                                <ol>Prioritäten:
+                                    <li>Funktionierendes Einkaufssystem per Klick</li>
+                                    <li>Funktionierendes Einkaufssystem via beliebiger Kinectfunktion</li>
+                                    <li>Kinect-Daten einbinden</li>
+                                    <li>Einkaufstatistiken mit SQL+flot (jQuery-Plugin)</li>
+                                </ol>
+                            </p>
+                         </div>
+                         <div class="section inactive" id="products">
+                            <p>
+                                Dies ist eine Übersicht mit Produkten, die sie kaufen können.
+                             </p>
+                         </div>
+                         <div class="section inactive" id="shop">
+                            <p>
+                                Dies ist die Sektion Shop.
+                            </p>
+                            <div id="shop-items">
+                            </div>
+                         </div>
+                         <div class="section inactive" id="cart">
+                            <p>
+                                Dies ist ihr Einkaufswagen.
+                            </p>
+                            <div id="product-display">
+                            </div>
+
+                            <button class="blue-button" id="purchase">
+                               <span class="fa fa-money"></span>
+                               Kaufen
+                            </button>
+
+                            <!-- DIESER BUTTON MUSS NOCH ENTFERNT WERDEN
+                                <button class="blue-button" id="showCart">
+                                   <span class="fa fa-shopping-cart"></span>
+                                   Waren anzeigen
+                                </button>
+                             -->
+                         </div>
+                         <div class="section inactive" id="admin-area">
+                             <ul class="tabs" style="margin-left:0">
+                                 <li>
+                                     <input type="radio" name="tabs2" id="tab3" checked>
+                                     <label for="tab3">
+                                         <span class="fa fa-bar-chart"></span>
+                                         <span class="tab-text">WStat</span>
+                                     </label>
+                                     <div id="tab-content1" class="tab-content">
+                                        <p>More content please!</p>
+                                     </div>
+                                 </li>
+
+                                 <li>
+                                     <input type="radio" name="tabs2" id="tab4">
+                                     <label for="tab4" id="listAllProducts">
+                                         <span class="fa fa-pencil"></span>
+                                         <span class="tab-text">WVerw</span>
+                                     </label>
+                                     <div id="tab-content1" class="tab-content">
+                                         <div class="input-prepend orange">
+                                             <span class="fa fa-search"></span>
+                                             <input type="text" placeholder="Filter" value required>
+                                         </div>
+                                        <div id="ware-administration">
+                                        </div>
+                                        <div id="ware-administration-options">
+                                            <h2> Waren </h2>
+                                            <h3> Waren hinzufügen, ändern </h3>
+                                                <button class="blue-button" id="deleteWareRecord" class="productActionButton">
+                                                    <span class="fa fa-trash"></span>
+                                                    entfernen
+                                                </button>
+                                                <button class="blue-button" id="createWareRecord" class="productActionButton">
+                                                    <span class="fa fa-plus-circle"></span>
+                                                    erstellen
+                                                </button>
+
+                                            <h3> Warenbestand ändern </h3>
+                                            <table>
+                                                <thead>
+                                                    <tr>
+                                                        <th> Modus </th>
+                                                        <th> arithmetischer Ausdruck </th>
+                                                        <th> ausführen </th>
+                                                    </tr>
+                                                 </thead>
+                                                 <tbody>
+                                                    <tr class="orange">
+                                                        <td>
+                                                            <select id="stock-admin-mode" name="id="stock-admin-mode">
+                                                                <option value="add">addieren</option>
+                                                                <option value="set">setzen</option>
+                                                                <option value="scale">skalieren</option>
+                                                            </select>
+                                                        </td>
+                                                        <td>
+                                                            <div class="input-prepend">
+                                                                <span class="fa fa-cubes"></span>
+                                                                <input type="text" id="stock-admin-amount" name="stock-admin-amount">
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <button class="blue-button" id="changeStock" class="productActionButton">
+                                                                <span class="fa fa-chevron-right"></span>
+                                                                ausführen
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                 </tbody>
+                                            </table>
+
+                                            <h3> Preise ändern </h3>
+                                            <table>
+                                                <thead>
+                                                    <tr>
+                                                        <th> Modus </th>
+                                                        <th> arithmetischer Ausdruck </th>
+                                                        <th> ausführen </th>
+                                                    </tr>
+                                                 </thead>
+                                                 <tbody>
+                                                    <tr class="orange">
+                                                        <td>
+                                                            <select id="price-admin-mode" name="id="price-admin-mode">
+                                                                <option value="add">addieren</option>
+                                                                <option value="set">setzen</option>
+                                                                <option value="scale">skalieren</option>
+                                                            </select>
+                                                        </td>
+                                                        <td>
+                                                            <div class="input-prepend">
+                                                                <span class="fa fa-money"></span>
+                                                                <input type="text" id="price-admin-amount" name="price-admin-amount">
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <button class="blue-button" id="changeWarePrice" class="productActionButton">
+                                                                <span class="fa fa-chevron-right"></span>
+                                                                ausführen
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                 </tbody>
+                                            </table>
+                                        </div>
+                                     </div>
+                                 </li>
+
+                                 <li>
+                                     <input type="radio" name="tabs2" id="tab5">
+                                     <label for="tab5">
+                                         <span class="fa fa-pie-chart"></span>
+                                         <span class="tab-text">UStat</span>
+                                     </label>
+                                     <div id="tab-content1" class="tab-content">
+                                        <p>More content please!</p>
+                                     </div>
+                                 </li>
+
+                                 <li>
+                                     <input type="radio" name="tabs2" id="tab6">
+                                     <label for="tab6" id="listAllUsers">
+                                         <span class="fa fa-pencil"></span>
+                                         <span class="tab-text">UVerw</span>
+                                     </label>
+                                     <div id="tab-content1" class="tab-content">
+                                         <div class="input-prepend orange">
+                                             <span class="fa fa-search"></span>
+                                             <input type="text" placeholder="Filter" value required>
+                                         </div>
+                                         <div id="user-administration">
+                                         </div>
+                                         <div id="user-administration-options">
+                                            <h2> Account </h2>
+                                            <h3> Accounts anlegen, bearbeiten </h3>
+                                            <button class="blue-button" id="createAccount" class="userActionButton">
+                                                <span class="fa fa-user-plus"></span>
+                                                anlegen
+                                            </button>
+                                            <button class="blue-button" id="editAccount" class="userActionButton">
+                                                <span class="fa fa-edit"></span>
+                                                bearbeiten
+                                            </button>
+
+                                            <h3> Accounts Adminrechte gewähren, entziehen </h3>
+                                            <button class="blue-button" id="empowerUser" class="userActionButton">
+                                                <span class="fa fa-level-up"></span>
+                                                befördern
+                                            </button>
+                                            <button class="blue-button" id="disempowerUser" class="userActionButton">
+                                                <span class="fa fa-level-down"></span>
+                                                degradieren
+                                            </button>
+
+                                            <h3> Accounts (ent)blocken, terminieren </h3>
+                                            <button class="blue-button" id="blockAccount" class="userActionButton"">
+                                                <span class="fa fa-lock"></span>
+                                                für
+                                                <select id="acc-admin-duration" name="acc-admin-duration">
+                                                    <option value="1">1 Stunde </option
+                                                    <option value="12">12 Stunden</option>
+                                                    <option value="24">24 Stunden</option>
+                                                    <option value="72">72 Stunden</option>
+                                                    <option value="168">168 Stunden</option>
+                                                    <option value="permanent">permanent</option>
+                                                </select>
+                                                blocken
+                                            </button>
+                                            <button class="blue-button" id="unblockAccount" class="userActionButton">
+                                                <span class="fa fa-unlock"></span>
+                                                entblocken
+                                            </button>
+                                            <button class="blue-button" id="terminateAccount" class="userActionButton">
+                                                <span class="fa fa-user-times"></span>
+                                                terminieren
+                                            </button>
+
+                                            <h2> Guthaben </h2>
+                                            <table>
+                                                <thead>
+                                                    <tr>
+                                                        <th> Modus </th>
+                                                        <th> arithmetischer Ausdruck </th>
+                                                        <th> ausführen </th>
+                                                    </tr>
+                                                 </thead>
+                                                 <tbody>
+                                                    <tr class="orange">
+                                                        <td>
+                                                            <select id="balance-admin-mode" name="id="balance-admin-mode">
+                                                                <option value="add">addieren</option>
+                                                                <option value="set">setzen</option>
+                                                                <option value="scale">skalieren</option>
+                                                            </select>
+                                                        </td>
+                                                        <td>
+                                                            <div class="input-prepend">
+                                                                <span class="fa fa-money"></span>
+                                                                <input type="text" id="balance-admin-amount" name="balance-admin-amount">
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <button class="blue-button" id="changeBalance" class="userActionButton">
+                                                                <span class="fa fa-chevron-right"></span>
+                                                                ausführen
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                 </tbody>
+                                            </table>
+
+                                            <h2> Passwort </h2>
+                                            <table>
+                                                <thead>
+                                                    <tr>
+                                                        <th> Modus </th>
+                                                        <th> ggf. Passswort setzen </th>
+                                                        <th> ausführen </th>
+                                                    </tr>
+                                                 </thead>
+                                                 <tbody>
+                                                    <tr class="orange">
+                                                        <td>
+                                                            <select id="balance-admin-mode" name="id="balance-admin-mode">
+                                                                <option value="request">auffordern</option>
+                                                                <option value="force">zwingen</option>
+                                                                <option value="set">setzen</option>
+                                                            </select>
+                                                        </td>
+                                                        <td>
+                                                            <div class="input-prepend">
+                                                                <span class="fa fa-key"></span>
+                                                                <input type="text" id="password-admin-set" name="password-admin-set">
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <button class="blue-button" id="changePassword" class="userActionButton">
+                                                                <span class="fa fa-chevron-right"></span>
+                                                                ausführen
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                 </tbody>
+                                            </table>
+
+                                         </div>
+                                     </div>
+                                 </li>
+                             </ul>
+
+                         </div>
+
+                         <div class="section inactive" id="account-profile">
+                            <div class="testblock-large">
+                                <p> Testtext </p>
+                            </div>
+                         </div>
+
+                         <div class="section inactive" id="kinect">
+                            <p>
+                                Ausgabe der Sensoren und Produkterkennung.
+                            </p>
+
+                            <h2> Sprachsteuerung setzen </h2>
+                            <button class="blue-button" id="automCmdSel____100">
+                                <span class="fa fa-plus"></span>
+                                selektieren
+                            </button>
+                            <button class="blue-button" id="automCmdCart___101">
+                                <span class="fa fa-shopping-cart"></span>
+                                Cart
+                            </button>
+                            <button class="blue-button" id="automCmdTWO____2">
+                                <span class="fa fa-plus"></span>
+                                TWO
+                            </button>
+                            <button class="blue-button" id="automCmdBACK___102">
+                                <span class="fa fa-plus"></span>
+                                BACK
+                            </button>
+                            <button class="blue-button" id="automCmdCancel_103">
+                                <span class="fa fa-plus"></span>
+                                CANCEL
+                            </button>
+                            <button class="blue-button" id="automCmdMore___104">
+                                <span class="fa fa-plus"></span>
+                                MORE
+                            </button>
+                        </div>
+                    </div>
+                </div><!--
+             --><footer id="footer">
+                    <p>
+                        <div id="account-data">
+                            <div id="acc-username" class="account-data-block">
+                                <span class="fa fa-user">
+                                </span>
+                                <span class="accdd">
+                                    ---
+                                </span>
+                            </div>
+                            <div id="acc-balance" class="account-data-block">
+                                <span class="fa fa-money">
+                                </span>
+                                <span class="accdd">
+                                    ---
+                                </span>
+                            </div>
+                            <div id="acc-isAdmin" class="account-data-block">
+                                <span class="fa fa-star">
+                                </span>
+                                <span class="accdd">
+                                    ---
+                                </span>
+                            </div>
+                            <div id="acc-cart" class="account-data-block">
+                                <span class="fa fa-shopping-cart">
+                                </span>
+                                <span class="accdd">
+                                    ---
+                                </span>
+                            </div>
+                        </div>
+                    </p>
+                </footer>
+            </div>
+        </div>
+
+    </body>
+
+</html>

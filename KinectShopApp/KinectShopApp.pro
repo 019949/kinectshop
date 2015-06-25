@@ -22,7 +22,11 @@ SOURCES += main.cpp \
     product.cpp \
     automaton.cpp \
     state.cpp \
-    transition.cpp
+    transition.cpp \
+    kinectthread.cpp \
+    display.cpp \
+    label.cpp \
+    stdafx.cpp
 
 # Please do not modify the following two lines. Required for deployment.
 include(html5applicationviewer/html5applicationviewer.pri)
@@ -40,4 +44,12 @@ HEADERS += \
     product.h \
     automaton.h \
     state.h \
-    transition.h
+    transition.h \
+    kinectthread.h \
+    display.h \
+    label.h\
+    stdafx.h\
+    targetver.h
+
+INCLUDEPATH += "C:/Program Files/Microsoft SDKs/Kinect/v1.6/inc"
+
